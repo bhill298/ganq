@@ -260,7 +260,7 @@ __global__ void gptq_marlin_repack_kernel(
 }  // namespace marlin
 
   #define CALL_IF(NUM_BITS, PACK_BITS, HAS_PERM)                                         \
-    else if (num_bits == NUM_BITS and pack_bits == PACK_BITS && has_perm == HAS_PERM) {                  \
+    else if (num_bits == NUM_BITS && pack_bits == PACK_BITS && has_perm == HAS_PERM) {                  \
       cudaFuncSetAttribute(                                                   \
           marlin::gptq_marlin_repack_kernel<marlin::repack_threads, NUM_BITS, \
                                             PACK_BITS, HAS_PERM>,                        \

@@ -1695,7 +1695,7 @@ __global__ void Marlin(
   #define __CALL_IF(NUM_BITS, THREAD_M_BLOCKS, THREAD_N_BLOCKS,                \
                     THREAD_K_BLOCKS, HAS_ACT_ORDER, HAS_ZP, GROUP_BLOCKS,      \
                     NUM_THREADS)                                               \
-    else if (num_bits == NUM_BITS && thread_m_blocks == THREAD_M_BLOCKS &&     \
+    if (!matched && num_bits == NUM_BITS && thread_m_blocks == THREAD_M_BLOCKS &&     \
              thread_n_blocks == THREAD_N_BLOCKS &&                             \
              thread_k_blocks == THREAD_K_BLOCKS &&                             \
              has_act_order == HAS_ACT_ORDER && has_zp == HAS_ZP &&             \
@@ -2057,8 +2057,7 @@ void marlin_mm_f16i4(const void* A, const void* B, void* C, void* C_tmp,
       thread_m_blocks = exec_cfg.max_m_blocks;
     }
 
-    if (false) {
-    }
+    bool matched = false;
     GPTQ_CALL_IF(4, 16, 4, 256)
     GPTQ_CALL_IF(4, 8, 8, 256)
     GPTQ_CALL_IF(4, 8, 4, 128)
@@ -2068,7 +2067,7 @@ void marlin_mm_f16i4(const void* A, const void* B, void* C, void* C_tmp,
     GPTQ_CALL_IF(8, 8, 4, 128)
     GPTQ_CALL_IF(8, 4, 8, 128)
 
-    else {
+    if (!matched) {
       TORCH_CHECK(false, "Unsupported shapes: MNK = [", prob_m, ", ", prob_n,
                   ", ", prob_k, "]", ", has_act_order = ", has_act_order,
                   ", num_groups = ", num_groups, ", group_size = ", group_size,
